@@ -20,6 +20,13 @@ contract TimelockTable {
     releaseTime = _releaseTime;
 
     /** 
+    // pool B
+    allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
+
+    // pool C
+    allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
+
+    // pool D
     allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
     */
   }

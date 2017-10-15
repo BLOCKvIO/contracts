@@ -34,7 +34,6 @@ contract BlockvToken is StandardToken, Pausable {
   uint256 public constant INITIAL_SUPPLY = initSupplyMultiplier * 10**decimals;    // total amount of VEE specified in Grains
   uint256 public startingBlock;
 
-  Timelock public tokensHolder;
   TimelockTable public tokenAllocations;
 
   /**
@@ -48,11 +47,7 @@ contract BlockvToken is StandardToken, Pausable {
 
     startingBlock = block.number;                               // for all of our time based calculations (like vesting etc.)
   
-    tokensHolder = new Timelock(this, 0xD0AF9f75EA618163944585bF56aCA98204d0AB66, now + 1 years);
     tokenAllocations = new TimelockTable(this, now + 1 years);
-
-    balances[tokensHolder] = 100000;
-    Transfer(0x0, tokensHolder, 100000);
 
     balances[tokenAllocations] = 100000;
     Transfer(0x0, tokenAllocations, 100000);
