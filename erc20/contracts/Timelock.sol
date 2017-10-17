@@ -2,6 +2,7 @@
 pragma solidity ^0.4.13;
 
 import "./zeppelin-solidity/contracts/token/ERC20Basic.sol";
+import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract Timelock {
 
@@ -14,11 +15,25 @@ contract Timelock {
   // timestamp where token release is enabled
   uint releaseTime;
 
-  function Timelock(ERC20Basic _token, address _beneficiary, uint _releaseTime) {
-    require(_releaseTime > now);
+  // percent to be released every 6 months
+  uint8 percentOfTokens = 20;
+
+  // total amount of locked tokens
+  uint256 totalAmount;
+
+  // tokens to be released every 6 months
+  uint256 tokensToBeReleased;
+
+  // lock time in days
+  uint timeDelay = 20 minutes;
+
+  function Timelock(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
     token = _token;
     beneficiary = _beneficiary;
-    releaseTime = _releaseTime;
+    releaseTime = now;
+    totalAmount = _totalAmount;
+
+    tokensToBeReleased = SafeMath.div(SafeMath.mul(_totalAmount, percentOfTokens), 100);
   }
 
   /**
@@ -28,9 +43,10 @@ contract Timelock {
     require(msg.sender == beneficiary);
     require(now >= releaseTime);
 
-    uint amount = token.balanceOf(this);
-    require(amount > 0);
+    uint256 amount = token.balanceOf(this);
+    require(amount >= tokensToBeReleased);
 
-    token.transfer(beneficiary, amount);
+    releaseTime = now + timeDelay;
+    assert(token.transfer(beneficiary, tokensToBeReleased));
   }
 }

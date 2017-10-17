@@ -19,16 +19,8 @@ contract TimelockTable {
     token = _token;
     releaseTime = _releaseTime;
 
-    /** 
-    // pool B
-    allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
-
-    // pool C
-    allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
-
-    // pool D
-    allocations[0xD0AF9f75EA618163944585bF56aCA98204d0AB66] =   25;
-    */
+    allocations[0xFba09655dE6FCb113A1733Cf980d58a9b226e031] = 25;
+    allocations[0x77373d8bfD31D25102237F9A8D2d838d25707782] = 1000;
   }
 
   /**
@@ -41,6 +33,6 @@ contract TimelockTable {
     var amount = allocations[msg.sender];
     allocations[msg.sender] = 0;
 
-    token.transfer(msg.sender, amount);
+    assert(token.transfer(msg.sender, amount));
   }
 }
