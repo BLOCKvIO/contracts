@@ -43,11 +43,20 @@ contract BlockvToken is StandardToken, Pausable {
   Timelock public tokenHolderC;
   TimelockD public tokenHolderD;
 
+  // migration
+  address public migrationMaster;
+  address public migrationAgent;
+  uint256 public totalMigrated;
+  event Migrate(address indexed _from, address indexed _to, uint256 _value);
+
   /**
    * @dev BlockvToken Constructor
    * Runs only on initial contract creation.
    */
-  function BlockvToken(uint256 _initialAmount) {
+  function BlockvToken(uint256 _initialAmount, address _migrationMaster) {
+    require(_migrationMaster != 0x0);
+    migrationMaster = _migrationMaster;
+
     totalSupply = _initialAmount;                               // Set the total supply
     uint256 senderTokens = SafeMath.div(SafeMath.mul(_initialAmount, releasedPercent), 100);
 
@@ -103,8 +112,56 @@ contract BlockvToken is StandardToken, Pausable {
     return super.approve(_spender, _value);
   }
 
-  function () {
-        //if ether is sent to this address, send it back.
-        revert();
+  /**
+  * Token migration support:
+  */
+
+  /** 
+  * @notice Migrate tokens to the new token contract.
+  * @dev Required state: Operational Migration
+  * @param _value The amount of token to be migrated
+  */
+  function migrate(uint256 _value) external {
+    require(migrationAgent != 0);
+    require(_value != 0);
+    require(_value <= balances[msg.sender]);
+
+    balances[msg.sender] = balances[msg.sender].sub(_value);
+    totalSupply = totalSupply.sub(_value);
+    totalMigrated = totalMigrated.add(_value);
+    MigrationAgent(migrationAgent).migrateFrom(msg.sender, _value);
+    
+    Migrate(msg.sender, migrationAgent, _value);
   }
+
+  /**
+  * @dev Set address of migration target contract and enable migration process.
+  * @param _agent The address of the MigrationAgent contract
+  */
+  function setMigrationAgent(address _agent) external {
+    require(migrationAgent != 0);
+    require(msg.sender == migrationMaster);
+
+    migrationAgent = _agent;
+  }
+
+  function setMigrationMaster(address _master) external {
+    require(_master != 0);
+    require(msg.sender == migrationMaster);
+
+    migrationMaster = _master;
+  }
+    
+  function () {
+    //if ether is sent to this address, send it back.
+    revert();
+  }
+
+}
+
+  /**
+  * @title Migration Agent interface
+  */
+contract MigrationAgent {
+  function migrateFrom(address _from, uint256 _value);
 }
