@@ -5,6 +5,7 @@ import "./zeppelin-solidity/contracts/token/StandardToken.sol";
 import "./zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Timelock.sol";
+import "./TimelockTable.sol";
 import "./TimelockD.sol";
 
 /**
@@ -39,7 +40,7 @@ contract BlockvToken is StandardToken, Pausable {
  
   uint256 public startingBlock;
 
-  Timelock public tokenHolderB;
+  TimelockTable public tokenHolderB;
   Timelock public tokenHolderC;
   TimelockD public tokenHolderD;
 
@@ -60,7 +61,7 @@ contract BlockvToken is StandardToken, Pausable {
     uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, lockPercentC), 100);
     uint256 tokensPoolD = SafeMath.div(SafeMath.mul(_initialAmount, lockPercentD), 100);
 
-    tokenHolderB = new Timelock(this, tokensPoolB, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+    tokenHolderB = new TimelockTable(this);
     tokenHolderC = new Timelock(this, tokensPoolC, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
     tokenHolderD = new TimelockD(this, tokensPoolD, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
 

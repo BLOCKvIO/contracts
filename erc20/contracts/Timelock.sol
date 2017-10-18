@@ -16,7 +16,7 @@ contract Timelock {
   uint releaseTime;
 
   // percent to be released every 6 months
-  uint8 percentOfTokens = 20;
+  uint8 constant percentOfTokens = 20;
 
   // total amount of locked tokens
   uint256 totalAmount;
@@ -25,7 +25,7 @@ contract Timelock {
   uint256 tokensToBeReleased;
 
   // lock time in days
-  uint timeDelay = 20 minutes;
+  uint constant timeDelay = 180 days;
 
   function Timelock(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
     token = _token;
