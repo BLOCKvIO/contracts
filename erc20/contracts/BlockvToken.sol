@@ -139,7 +139,8 @@ contract BlockvToken is StandardToken, Pausable {
   * @param _agent The address of the MigrationAgent contract
   */
   function setMigrationAgent(address _agent) external {
-    require(migrationAgent != 0);
+    require(_agent != 0);
+    require(migrationAgent == 0);
     require(msg.sender == migrationMaster);
 
     migrationAgent = _agent;
@@ -159,9 +160,9 @@ contract BlockvToken is StandardToken, Pausable {
 
 }
 
-  /**
-  * @title Migration Agent interface
-  */
-contract MigrationAgent {
+/**
+* @title Migration Agent interface
+*/
+interface MigrationAgent {
   function migrateFrom(address _from, uint256 _value);
 }
