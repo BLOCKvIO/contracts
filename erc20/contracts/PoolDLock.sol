@@ -4,7 +4,7 @@ pragma solidity ^0.4.13;
 import "./zeppelin-solidity/contracts/token/ERC20Basic.sol";
 import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract TimelockD {
+contract PoolDLock {
 
   // ERC20 basic token contract being held
   ERC20Basic token;
@@ -18,21 +18,32 @@ contract TimelockD {
   // percent to be released after 3 years
   uint8 percentOfFirstRelease = 50;
 
+  uint constant firstReleaseDelay = 3 years;
+
+  // delay between next releases of tokens after 3 years
+  uint constant nextReleasesDelay = 30 days;
+
+  uint8 constant numberOfNextReleases = 36;
+
   bool firstRelease = false;
 
   // total amount of locked tokens
   uint256 totalAmount;
 
   // amount of tokens be released after 3 years
-  uint256 amountOfFirstRelease;
+  uint256 firstReleaseAmount;
 
-  function TimelockD(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
+  uint256 nextReleaseAmount;
+
+  function PoolDLock(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
     token = _token;
     beneficiary = _beneficiary;
-    releaseTime = now + 3 years;
+    releaseTime = now + firstReleaseDelay;
     totalAmount = _totalAmount;
 
-    amountOfFirstRelease = SafeMath.div(SafeMath.mul(_totalAmount, percentOfFirstRelease), 100); 
+    firstReleaseAmount = SafeMath.div(SafeMath.mul(_totalAmount, percentOfFirstRelease), 100); 
+
+    nextReleaseAmount = SafeMath.div(SafeMath.div(SafeMath.mul(_totalAmount, 100 - percentOfFirstRelease), 100), numberOfNextReleases); 
   }
 
   /**
@@ -46,11 +57,11 @@ contract TimelockD {
 
     uint256 tokenAmount = 0;
     if (!firstRelease) {
-        tokenAmount = amountOfFirstRelease; 
+        tokenAmount = firstReleaseAmount; 
         firstRelease = true; 
     } else {
 
-        tokenAmount = SafeMath.div(amountOfFirstRelease, 36);
+        tokenAmount = nextReleaseAmount;
     }
 
     require(amount >= tokenAmount);
