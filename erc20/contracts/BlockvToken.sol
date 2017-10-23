@@ -4,8 +4,10 @@ pragma solidity ^0.4.13;
 import "./zeppelin-solidity/contracts/token/StandardToken.sol";
 import "./zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./zeppelin-solidity/contracts/math/SafeMath.sol";
-import "./Timelock.sol";
-import "./TimelockD.sol";
+
+import "./PoolBLock.sol";
+import "./PoolCLock.sol";
+import "./PoolDLock.sol";
 
 /**
  * @title Blockv Token
@@ -32,16 +34,16 @@ contract BlockvToken is StandardToken, Pausable {
   string public constant symbol = 'VEE';                                 // Set the token symbol for display
   uint8 public constant decimals = 8;                                    // Set the number of decimals for display
 
-  uint8 constant releasedPercent = 35;
-  uint8 constant lockPercentB = 25;
-  uint8 constant lockPercentC = 25;
-  uint8 constant lockPercentD = 15;
+  uint8 public constant poolAPercentage = 35;		
+  uint8 public constant poolBPercentage = 25;		
+  uint8 public constant poolCPercentage = 25;		
+  uint8 public constant poolDPercentage = 15;
  
   uint256 public startingBlock;
 
-  Timelock public tokenHolderB;
-  Timelock public tokenHolderC;
-  TimelockD public tokenHolderD;
+  PoolBLock public poolBLock;
+  PoolCLock public poolCLock;
+  PoolDLock public poolDLock;
 
   // migration
   address public migrationMaster;
@@ -58,28 +60,28 @@ contract BlockvToken is StandardToken, Pausable {
     migrationMaster = _migrationMaster;
 
     totalSupply = _initialAmount;                               // Set the total supply
-    uint256 senderTokens = SafeMath.div(SafeMath.mul(_initialAmount, releasedPercent), 100);
+    uint256 senderTokens = SafeMath.div(SafeMath.mul(_initialAmount, poolAPercentage), 100);
 
     balances[msg.sender] = senderTokens;                      // Creator address is assigned all
     Transfer(0x0, msg.sender, senderTokens);
 
     startingBlock = block.number;                               // for all of our time based calculations (like vesting etc.)
   
-    uint256 tokensPoolB = SafeMath.div(SafeMath.mul(_initialAmount, lockPercentB), 100);
-    uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, lockPercentC), 100);
-    uint256 tokensPoolD = SafeMath.div(SafeMath.mul(_initialAmount, lockPercentD), 100);
+    uint256 tokensPoolB = SafeMath.div(SafeMath.mul(_initialAmount, poolBPercentage), 100);
+    uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, poolCPercentage), 100);
+    uint256 tokensPoolD = SafeMath.div(SafeMath.mul(_initialAmount, poolDPercentage), 100);
 
-    tokenHolderB = new Timelock(this, tokensPoolB, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
-    tokenHolderC = new Timelock(this, tokensPoolC, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
-    tokenHolderD = new TimelockD(this, tokensPoolD, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+    poolBLock = new PoolBLock(this);
+    poolCLock = new PoolCLock(this, tokensPoolC, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+    poolDLock = new PoolDLock(this, tokensPoolD, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
 
-    balances[tokenHolderB] = tokensPoolB;
-    balances[tokenHolderC] = tokensPoolC;
-    balances[tokenHolderD] = tokensPoolD;
+    balances[poolBLock] = tokensPoolB;
+    balances[poolCLock] = tokensPoolC;
+    balances[poolDLock] = tokensPoolD;
 
-    Transfer(0x0, tokenHolderB, tokensPoolB);
-    Transfer(0x0, tokenHolderC, tokensPoolC);
-    Transfer(0x0, tokenHolderD, tokensPoolD);
+    Transfer(0x0, poolBLock, tokensPoolB);
+    Transfer(0x0, poolCLock, tokensPoolC);
+    Transfer(0x0, poolDLock, tokensPoolD);
   }
 
   /**
