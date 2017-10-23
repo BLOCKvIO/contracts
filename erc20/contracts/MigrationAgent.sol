@@ -2,6 +2,7 @@ pragma solidity ^0.4.13;
 
 import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 import "./zeppelin-solidity/contracts/ownership/Ownable.sol";
+
 import "./BlockvToken.sol";
 import "./BlockvTokenV2.sol";
 

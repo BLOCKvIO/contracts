@@ -42,7 +42,8 @@ contract PoolDLock {
     totalAmount = _totalAmount;
 
     firstReleaseAmount = SafeMath.div(SafeMath.mul(_totalAmount, percentOfFirstRelease), 100); 
-
+    
+    // potential rounding problem
     nextReleaseAmount = SafeMath.div(SafeMath.div(SafeMath.mul(_totalAmount, 100 - percentOfFirstRelease), 100), numberOfNextReleases); 
   }
 

@@ -32,15 +32,13 @@ contract BlockvToken is StandardToken, Pausable {
 
   string public constant name = 'BLOCKv Token';                          // Set the token name for display
   string public constant symbol = 'VEE';                                 // Set the token symbol for display
-  uint8 public constant decimals = 8;                                    // Set the number of decimals for display
+  uint8 public constant decimals = 18;                                   // Set the number of decimals for display
 
   uint8 public constant poolAPercentage = 35;		
   uint8 public constant poolBPercentage = 25;		
   uint8 public constant poolCPercentage = 25;		
   uint8 public constant poolDPercentage = 15;
  
-  uint256 public startingBlock;
-
   PoolBLock public poolBLock;
   PoolCLock public poolCLock;
   PoolDLock public poolDLock;
@@ -56,7 +54,7 @@ contract BlockvToken is StandardToken, Pausable {
    * Runs only on initial contract creation.
    */
   function BlockvToken(uint256 _initialAmount, address _migrationMaster) {
-    require(_migrationMaster != 0x0);
+    require(_migrationMaster != 0);
     migrationMaster = _migrationMaster;
 
     totalSupply = _initialAmount;                               // Set the total supply
@@ -64,8 +62,6 @@ contract BlockvToken is StandardToken, Pausable {
 
     balances[msg.sender] = senderTokens;                      // Creator address is assigned all
     Transfer(0x0, msg.sender, senderTokens);
-
-    startingBlock = block.number;                               // for all of our time based calculations (like vesting etc.)
   
     uint256 tokensPoolB = SafeMath.div(SafeMath.mul(_initialAmount, poolBPercentage), 100);
     uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, poolCPercentage), 100);
@@ -159,7 +155,6 @@ contract BlockvToken is StandardToken, Pausable {
     //if ether is sent to this address, send it back.
     revert();
   }
-
 }
 
 /**

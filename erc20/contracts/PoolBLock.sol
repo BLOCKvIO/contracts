@@ -37,6 +37,9 @@ contract PoolBLock {
     require(now >= elem.releaseTime);
     require(elem.numPayoutCycles > 0);
 
+    uint256 amount = token.balanceOf(this);
+    require(amount >= elem.amount);
+
     elem.numPayoutCycles -= 1;
     elem.releaseTime = now + releaseTimeDelay;
 
