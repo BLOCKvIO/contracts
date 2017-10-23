@@ -3,7 +3,11 @@ pragma solidity ^0.4.13;
 
 import "./zeppelin-solidity/contracts/token/StandardToken.sol";
 import "./zeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./PoolBLock.sol";
+import "./PoolCLock.sol";
+import "./PoolDLock.sol";
 
 /**
  * @title Blockv Token
@@ -28,98 +32,47 @@ contract BlockvToken is StandardToken, Pausable {
 
   string public constant name = 'BLOCKv Token';                          // Set the token name for display
   string public constant symbol = 'VEE';                                 // Set the token symbol for display
-  uint256 public constant decimals = 8;                                  // Set the number of decimals for display
-  uint256 public constant initSupplyMultiplier = 1000000000;
-  uint256 public constant INITIAL_SUPPLY = initSupplyMultiplier * 10**decimals;    // total amount of VEE specified in Grains
+  uint8 public constant decimals = 8;                                    // Set the number of decimals for display
+
+  uint8 public constant poolAPercentage = 35;		
+  uint8 public constant poolBPercentage = 25;		
+  uint8 public constant poolCPercentage = 25;		
+  uint8 public constant poolDPercentage = 15;
+ 
   uint256 public startingBlock;
 
-  /**
-  * here are the addresses of our ledger Contracts which provide the transfer/allowance mechanos
-  * which are based on the TGE outcome.
-  */ 
-  string public constant poolALedger = '0x1f2218868faf2dfe7e7b475501423dc71430b1ad';
-  string public constant poolBLedger = '';
-  string public constant poolCLedger = '';
-  string public constant poolDLedger = '';
-
-  /**
-  * here are the percentages of our 4 pools
-  */ 
-  uint256 public constant poolAPercentage = 35;
-  uint256 public constant poolBPercentage = 25;
-  uint256 public constant poolCPercentage = 25;
-  uint256 public constant poolDPercentage = 15;
-
-  /**
-  * safety/require vars
-  */ 
-  bool public poolASetup = false; 
-  bool public poolBSetup = false; 
-  bool public poolCSetup = false; 
-  bool public poolDSetup = false; 
-
-  /**
-  * structs needed for our pool payout rules
-  */ 
-  struct PayoutCycleDefinition {
-    uint256 payoutBlock;
-    uint percentToBeReleased;
-  } 
-
-  struct PayoutDefinition {
-    uint256 amountTotal;
-    uint256 amountLeft;
-    address to;
-  }
-
-  struct PoolDefinition {
-    uint PercentageOfSupply;
-    uint NumPayoutCycles;
-    PayoutCycleDefinition[] PayoutCycles;
-    PayoutDefinition[] Payouts;
-  }
-
-  /**
-  * finally, our pools
-  */ 
-  PoolDefinition[4] public pools;
-   
-  /**
-   * @dev InitPool functions
-   * Called only once by constructor
-   */
-  function initPoolA() internal {
-    //only allow this to be called once
-    require(poolASetup == false);
-
-    // step 1: init the PoolDefinition
-    PoolDefinition memory pool;
-    PayoutCycleDefinition memory cycle;
-    
-    pool.PercentageOfSupply = poolAPercentage;
-    pool.NumPayoutCycles = 1;
-    
-    cycle.payoutBlock = startingBlock;
-    cycle.percentToBeReleased = 100;
-    pool.PayoutCycles.push(cycle);
-
-    // step 2: read the poolA ledger to init the payouts
-
-    // we are done with initializing
-    pools.push(pool);
-    poolASetup = true;
-  }
+  PoolBLock public poolBLock;
+  PoolCLock public poolCLock;
+  PoolDLock public poolDLock;
 
   /**
    * @dev BlockvToken Constructor
    * Runs only on initial contract creation.
    */
-  function BlockvToken() {
-    totalSupply = INITIAL_SUPPLY;                               // Set the total supply
-    balances[msg.sender] = INITIAL_SUPPLY;                      // Creator address is assigned all
+  function BlockvToken(uint256 _initialAmount) {
+    totalSupply = _initialAmount;                               // Set the total supply
+    uint256 senderTokens = SafeMath.div(SafeMath.mul(_initialAmount, poolAPercentage), 100);
+
+    balances[msg.sender] = senderTokens;                      // Creator address is assigned all
+    Transfer(0x0, msg.sender, senderTokens);
+
     startingBlock = block.number;                               // for all of our time based calculations (like vesting etc.)
-                                                                // unsafe, but can be verified right after publishing as it is only set once
-    initPoolA();
+  
+    uint256 tokensPoolB = SafeMath.div(SafeMath.mul(_initialAmount, poolBPercentage), 100);
+    uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, poolCPercentage), 100);
+    uint256 tokensPoolD = SafeMath.div(SafeMath.mul(_initialAmount, poolDPercentage), 100);
+
+    poolBLock = new PoolBLock(this);
+    poolCLock = new PoolCLock(this, tokensPoolC, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+    poolDLock = new PoolDLock(this, tokensPoolD, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+
+    balances[poolBLock] = tokensPoolB;
+    balances[poolCLock] = tokensPoolC;
+    balances[poolDLock] = tokensPoolD;
+
+    Transfer(0x0, poolBLock, tokensPoolB);
+    Transfer(0x0, poolCLock, tokensPoolC);
+    Transfer(0x0, poolDLock, tokensPoolD);
   }
 
   /**
@@ -152,4 +105,8 @@ contract BlockvToken is StandardToken, Pausable {
     return super.approve(_spender, _value);
   }
 
+  function () {
+        //if ether is sent to this address, send it back.
+        revert();
+  }
 }
