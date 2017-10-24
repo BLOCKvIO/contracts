@@ -32,7 +32,7 @@ contract BlockvToken is StandardToken, Pausable {
 
   string public constant name = 'BLOCKv Token';                          // Set the token name for display
   string public constant symbol = 'VEE';                                 // Set the token symbol for display
-  uint8 public constant decimals = 18;                                   // Set the number of decimals for display
+  uint8 public constant decimals = 8;                                    // Set the number of decimals for display
 
   uint8 public constant poolAPercentage = 35;		
   uint8 public constant poolBPercentage = 25;		

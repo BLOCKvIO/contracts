@@ -42,7 +42,7 @@ contract PoolAContract is Ownable {
         for (; i < currentIndex + chunkSize && i < ledgerContractSize; i++) {
             var (, to, amount, discount, ) = ledgerContract.distributionList(i);
             uint256 tokenAmount = getTokenAmount(amount, discount);
-            assert(blockVContract.transfer(to, tokenAmount)); 
+            assert(blockVContract.transferFrom(msg.sender, to, tokenAmount));
         }
         currentIndex = i;   
 
