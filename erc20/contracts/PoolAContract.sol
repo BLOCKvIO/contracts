@@ -12,13 +12,14 @@ contract PoolAContract is Ownable {
 
     bool public done = false;
 
-    uint multiplier = 10 ** 13;
-    uint decimals = 8; // to be discussed
+    uint decimals = 18;
 
-    // 69164622576285.7 * multiplier
-    uint256 public oneTokenInWei = 691646225762857000000000000;
+    uint tokenMultiplier = 10 ** 8;
+    // 69164622576285.06170802 * tokenMultiplier
+    uint256 public oneTokenInWei = 6916462257628506170802;
 
     uint defaultDiscount = 100;
+    uint discountMultiplier = 10 ** 13;
     mapping(uint8 => uint) discounts;
 
     address public ledgerContractAddr;
@@ -39,11 +40,11 @@ contract PoolAContract is Ownable {
         ledgerContractSize = ledgerContract.distributionEntryCount();
 
         // init discounts
-        // percent * multiplier
+        // percent * discountMultiplier
         discounts[1] = 778486932785652;
-        discounts[2] = 80 * multiplier;
-        discounts[3] = 90 * multiplier;
-        discounts[100] = 100 * multiplier;
+        discounts[2] = 80 * discountMultiplier;
+        discounts[3] = 90 * discountMultiplier;
+        discounts[100] = 100 * discountMultiplier;
     }
 
     function distribution() public onlyOwner {
@@ -67,8 +68,8 @@ contract PoolAContract is Ownable {
     }
 
     function getTokenAmount(uint256 amount, uint8 discountGroup) private returns(uint256) {
-        uint discount = getTokenDiscount(discountGroup);
-        return amount * 10 ** decimals / (oneTokenInWei * discount) / 100 / multiplier;
+        uint discount = 80 * discountMultiplier; //getTokenDiscount(discountGroup);
+        return amount * 10 ** tokenMultiplier * 10 ** decimals / (oneTokenInWei * discount / 100 / discountMultiplier);
     }
 
     function getTokenDiscount(uint8 discount) private returns(uint) {
@@ -77,6 +78,6 @@ contract PoolAContract is Ownable {
             return r;
         }
         
-        return defaultDiscount * multiplier;
+        return defaultDiscount * discountMultiplier;
     }
 }
