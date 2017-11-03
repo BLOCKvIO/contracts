@@ -14,13 +14,13 @@ contract PoolAContract is Ownable {
 
     uint decimals = 18;
 
-    uint tokenMultiplier = 10 ** 8;
+    uint256 tokenMultiplier = 10 ** 8;
     // 69164622576285.06170802 * tokenMultiplier
     uint256 public oneTokenInWei = 6916462257628506170802;
 
     uint defaultDiscount = 100;
-    uint discountMultiplier = 10 ** 13;
-    mapping(uint8 => uint) discounts;
+    uint256 discountMultiplier = 10 ** 13;
+    mapping(uint8 => uint256) discounts;
 
     address public ledgerContractAddr;
     address public blockVContractAddr;
@@ -67,12 +67,12 @@ contract PoolAContract is Ownable {
         chunkSize = _chunkSize;
     }
 
-    function getTokenAmount(uint256 amount, uint8 discountGroup) private returns(uint256) {
-        uint discount = 80 * discountMultiplier; //getTokenDiscount(discountGroup);
-        return amount * 10 ** tokenMultiplier * 10 ** decimals / (oneTokenInWei * discount / 100 / discountMultiplier);
+    function getTokenAmount(uint256 amount, uint8 discountGroup) private constant returns(uint256) {
+        uint256 discount = getTokenDiscount(discountGroup);
+        return amount * tokenMultiplier * 10 ** decimals / (oneTokenInWei * discount / 100 / discountMultiplier);
     }
 
-    function getTokenDiscount(uint8 discount) private returns(uint) {
+    function getTokenDiscount(uint8 discount) private constant returns(uint256) {
         uint r = discounts[discount];
         if (r != 0) {
             return r;
