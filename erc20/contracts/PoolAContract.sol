@@ -17,7 +17,7 @@ contract PoolAContract is Ownable {
     uint256 public oneTokenInWei = 69164622576285;
 
     uint defaultDiscount = 100;
-    uint256 discountMultiplier = 10 ** 18;
+    uint256 discountMultiplier = 10 ** 24;
     mapping(uint8 => uint256) discounts;
 
     address public ledgerContractAddr;
@@ -39,7 +39,7 @@ contract PoolAContract is Ownable {
 
         // init discounts
         // percent * discountMultiplier
-        discounts[1] = 78118333822467732419;
+        discounts[1] = 78118333822467732419033555;
         discounts[2] = 80 * discountMultiplier;
         discounts[3] = 90 * discountMultiplier;
         discounts[100] = 100 * discountMultiplier;
