@@ -14,7 +14,7 @@ contract PoolAContract is Ownable {
 
     uint decimals = 18;
 
-    uint256 public oneTokenInWei = 69164622576285;
+    uint256 public oneTokenInWei = 69164622576286;
 
     uint defaultDiscount = 100;
     uint256 discountMultiplier = 10 ** 24;
