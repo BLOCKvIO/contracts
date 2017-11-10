@@ -10,7 +10,7 @@ contract PoolBLock {
 
   uint startDay = now;
 
-  uint payoutCycleInDays = 2 minutes; //180 days;
+  uint payoutCycleInDays = 180 days;
 
   // lock entry
   struct lockEntry {
