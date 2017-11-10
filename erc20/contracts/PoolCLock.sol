@@ -43,8 +43,9 @@ contract PoolCLock {
    */
   function claim() {
      require(msg.sender == beneficiary);
-     uint cycles = getPayoutCycles();
+     require(payoutCyclesLeft > 0);
 
+     uint cycles = getPayoutCycles();
      require(cycles > 0);
 
      uint256 tbr = tokensToBeReleased * cycles;
