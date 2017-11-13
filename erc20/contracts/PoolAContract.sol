@@ -12,12 +12,12 @@ contract PoolAContract is Ownable {
 
     bool public done = false;
 
-    uint decimals = 18;
+    uint constant decimals = 18;
 
-    uint256 public oneTokenInWei = 69164622576286;
+    uint256 public constant oneTokenInWei = 69164622576286;
 
-    uint defaultDiscount = 100;
-    uint256 discountMultiplier = 10 ** 24;
+    uint constant defaultDiscount = 100;
+    uint256 constant discountMultiplier = 10 ** 24;
     mapping(uint8 => uint256) discounts;
 
     address public ledgerContractAddr;

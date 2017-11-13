@@ -94,6 +94,7 @@ contract BlockvPublicLedger is Ownable {
 
 
   /**
+  * IMPORTANT This function is not used anymore, we decided to move this functionality to Pool A!!!
   * @dev finalize the distributionList after token price is set and ETH conversion is known
   * @param _tokenPrice the price of a VEE in USD-cents
   * @param _usdToEthConversionRate in grains

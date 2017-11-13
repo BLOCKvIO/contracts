@@ -12,57 +12,62 @@ contract PoolCLock {
   // beneficiary of tokens after they are released
   address beneficiary;
 
+  // first release date
   uint startDay = now;
 
-  uint maxNumOfPayoutCycles = 5;
+  // max number of payout cycles = 20%
+  uint constant maxNumOfPayoutCycles = 5;
 
+  // number of payout cycles left
   uint payoutCyclesLeft = 5;
 
-  // timestamp where token release is enabled
-  uint payoutCycleInDays = 180 days;
+  // first release flag
+  bool isFirstRelease = true;
 
-  // percent to be released every 6 months
-  uint8 constant percentToBeReleased = 20;
+  // cycle period in days
+  uint constant payoutCycleInDays = 180 days;
 
   // total amount of locked tokens
-  uint256 totalAmount;
+  uint256 public constant totalAmount = 9115678103000638012558518869;
 
-  // tokens to be released every 6 months
-  uint256 tokensToBeReleased;
+  // tokens to be released every 6months
+  uint256 public constant tokenToBeReleased = 1823135620600127602511703773;
 
-  function PoolCLock(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
+  // the rest of division = totalAmount / 5
+  uint256 public constant restOfTokens = 4;
+
+  function PoolCLock(ERC20Basic _token, address _beneficiary) {
     token = _token;
     beneficiary = _beneficiary;
-    totalAmount = _totalAmount;
-
-    tokensToBeReleased = SafeMath.div(SafeMath.mul(_totalAmount, percentToBeReleased), 100);
   }
 
   /**
    * @dev beneficiary claims tokens held by time lock
    */
   function claim() {
-     require(msg.sender == beneficiary);
-     require(payoutCyclesLeft > 0);
+    require(msg.sender == beneficiary);
+    require(payoutCyclesLeft > 0);
 
-     uint cycles = getPayoutCycles();
-     require(cycles > 0);
+    uint cycles = getPayoutCycles();
+    require(cycles > 0);
 
-     uint256 tbr = tokensToBeReleased * cycles;
+    uint256 tbr = tokenToBeReleased * cycles;
 
-     uint256 amount = token.balanceOf(this);
-     require(amount >= tbr);
+    if (isFirstRelease) {
+        isFirstRelease = false;
+        tbr += restOfTokens;
+    }
 
-     payoutCyclesLeft -= cycles;
+    payoutCyclesLeft -= cycles;
 
     assert(token.transfer(beneficiary, tbr));
   }
 
-  function getPayoutCycles() private returns (uint) {
+  function getPayoutCycles() private constant returns (uint) {
       uint cycles = uint((now - startDay) / payoutCycleInDays) + 1;
 
       if (cycles > maxNumOfPayoutCycles) {
-         cycles = maxNumOfPayoutCycles;
+          cycles = maxNumOfPayoutCycles;
       }
 
       return cycles - (maxNumOfPayoutCycles - payoutCyclesLeft);

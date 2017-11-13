@@ -6,11 +6,19 @@ import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract PoolBLock {
 
-  uint maxNumOfPayoutCycles = 5;
+  // ERC20 basic token contract being held
+  ERC20Basic token;
 
+ // allocations map
+  mapping (address => lockEntry) public allocations;
+
+  // max number of payout cycles
+  uint constant maxNumOfPayoutCycles = 5;
+
+  // first release date
   uint startDay = now;
 
-  uint payoutCycleInDays = 180 days;
+  uint constant payoutCycleInDays = 180 days;
 
   // lock entry
   struct lockEntry {
@@ -18,12 +26,6 @@ contract PoolBLock {
       uint256 amount;
       uint numPayoutCycles;
   }
-
-  // ERC20 basic token contract being held
-  ERC20Basic token;
-
- // allocations map
-  mapping (address => lockEntry) public allocations;
 
   function PoolBLock(ERC20Basic _token) {
     token = _token;
@@ -46,15 +48,12 @@ contract PoolBLock {
 
     uint256 tbr = elem.amount * cycles;
 
-    uint256 amount = token.balanceOf(this);
-    require(amount >= tbr);
-
     elem.numPayoutCycles -= cycles;
 
     assert(token.transfer(msg.sender, tbr));
   }
 
-  function getPayoutCycles(uint payoutCyclesLeft) private returns (uint) {
+  function getPayoutCycles(uint payoutCyclesLeft) private constant returns (uint) {
     uint cycles = uint((now - startDay) / payoutCycleInDays) + 1;
 
     if (cycles > maxNumOfPayoutCycles) {

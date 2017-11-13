@@ -12,39 +12,35 @@ contract PoolDLock {
   // beneficiary of tokens after they are released
   address beneficiary;
 
-  // timestamp where token release is enabled
-  uint releaseTime;
+  // first release date
+  uint startDay = now + 3 years;
 
-  // percent to be released after 3 years
-  uint8 percentOfFirstRelease = 50;
+  // after the first release
+  uint payoutCyclesLeft = 36;
 
-  uint constant firstReleaseDelay = 3 years;
+  // after the first release
+  uint constant payoutCycleInDays = 30 days;
 
-  // delay between next releases of tokens after 3 years
-  uint constant nextReleasesDelay = 30 days;
+  // number of payout cycles after the first release
+  uint constant maxNumOfPayoutCycles = 36;
 
-  uint8 constant numberOfNextReleases = 36;
-
-  bool firstRelease = false;
+  // first release flag
+  bool isFirstRelease = true;
 
   // total amount of locked tokens
-  uint256 totalAmount;
+  uint256 public constant totalAmount = 5469406861800382807535111321;
 
-  // amount of tokens be released after 3 years
-  uint256 firstReleaseAmount;
+  uint256 public constant firstReleaseTokens = 2734703430900191403767555660;
 
-  uint256 nextReleaseAmount;
+  // amount of tokens to be released after 3 years 36 payout cycles - 1 month delay
+  uint256 public constant nextReleasesTokens = 75963984191671983437987657;
 
-  function PoolDLock(ERC20Basic _token, uint256 _totalAmount, address _beneficiary) {
+  // the rest of division = (totalAmount * .5) / 36 should be added to the first release
+  uint256 public constant restOfTokens = 9;
+
+  function PoolDLock(ERC20Basic _token, address _beneficiary) {
     token = _token;
     beneficiary = _beneficiary;
-    releaseTime = now + firstReleaseDelay;
-    totalAmount = _totalAmount;
-
-    firstReleaseAmount = SafeMath.div(SafeMath.mul(_totalAmount, percentOfFirstRelease), 100); 
-    
-    // potential rounding problem
-    nextReleaseAmount = SafeMath.div(SafeMath.div(SafeMath.mul(_totalAmount, 100 - percentOfFirstRelease), 100), numberOfNextReleases); 
   }
 
   /**
@@ -52,21 +48,42 @@ contract PoolDLock {
    */
   function claim() {
     require(msg.sender == beneficiary);
-    require(now >= releaseTime);
+    require(payoutCyclesLeft > 0);
+    require(now >= firstReleaseDay);
 
-    uint256 amount = token.balanceOf(this);
-
-    uint256 tokenAmount = 0;
-    if (!firstRelease) {
-        tokenAmount = firstReleaseAmount; 
-        firstRelease = true; 
+    uint256 tokens = 0;
+    uint cycles = getPayoutCycles();
+    if (isFirstRelease) {
+      isFirstRelease = false;
+      tokens = getFirstReleaseTokens(cycles);
     } else {
 
-        tokenAmount = nextReleaseAmount;
+      require(cycles > 0);
+      tokens = nextReleasesTokens * cycles;
     }
 
-    require(amount >= tokenAmount);
-    releaseTime = now + 30 days;
-    assert(token.transfer(beneficiary, tokenAmount));
+    payoutCyclesLeft -= cycles;
+
+    assert(token.transfer(beneficiary, tokens));
+  }
+
+  function getFirstReleaseTokens(uint cycles) private returns (uint256) {
+     uint256 r = firstReleaseTokens;
+
+     if (cycles > 0) {
+        r += nextReleasesTokens * cycles;
+     }
+
+     return r + restOfTokens;
+  }
+
+  function getPayoutCycles() private returns (uint) {
+      uint cycles = uint((now - firstReleaseDay) / payoutCycleInDays) + 1;
+
+      if (cycles > maxNumOfPayoutCycles) {
+          cycles = maxNumOfPayoutCycles;
+      }
+
+      return cycles - (maxNumOfPayoutCycles - payoutCyclesLeft);
   }
 }

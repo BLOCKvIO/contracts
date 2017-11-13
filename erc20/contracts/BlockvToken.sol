@@ -16,13 +16,13 @@ import "./PoolDLock.sol";
  * VEE Tokens are divisible by 1e8 (100,000,000) base
  * units referred to as 'Grains'.
  *
- * VEE are displayed using 8 decimal places of precision.
+ * VEE are displayed using 18 decimal places of precision.
  *
  * 1 VEE is equivalent to:
- *   100000000 == 1 * 10**8 == 1e8 == One Hundred Million Grains
+ *   100000000 == 1 * 10**18 == 1e18 == One Hundred Million Grains
  *
  * 1 Billion VEE (total supply) is equivalent to:
- *   100000000000000000 == 1000000000 * 10**8 == 1e17 == One Hundred Quadrillion Grains
+ *   100000000000000000 == 1000000000 * 10**18 == 1e27 == One Hundred Quadrillion Grains
  *
  * All initial VEE Grains are assigned to the creator of
  * this contract.
@@ -30,18 +30,22 @@ import "./PoolDLock.sol";
  */
 contract BlockvToken is StandardToken, Pausable {
 
-  string public constant name = 'BLOCKv Token';                          // Set the token name for display
-  string public constant symbol = 'VEE';                                 // Set the token symbol for display
-  uint8 public constant decimals = 18;                                   // Set the number of decimals for display
+  string public constant name = "BLOCKv Token"; // Set the token name for display
+  string public constant symbol = "VEE";        // Set the token symbol for display
+  uint8  public constant decimals = 18;         // Set the number of decimals for display
 
-  uint8 constant poolAPercentage = 35;
-  uint8 constant poolBPercentage = 25;
-  uint8 constant poolCPercentage = 25;
-  uint8 constant poolDPercentage = 15;
- 
   PoolBLock public poolBLock;
   PoolCLock public poolCLock;
   PoolDLock public poolDLock;
+
+  uint256 constant totalAmountOfTokens = 3646271241200255205023407547;
+  uint256 constant amountOfTokensPoolA = 1276194934420089321758192641;
+  uint256 constant amountOfTokensPoolB = 9115678103000638012558518869;
+  uint256 constant amountOfTokensPoolC = 9115678103000638012558518869;
+  uint256 constant amountOfTokensPoolD = 5469406861800382807535111321;
+
+  address constant beneficiaryOfPoolC = 0x11B48d3179Eb448bcf6b7340B146E98DC44474Da;
+  address constant beneficiaryOfPoolD = 0xa6EE2adb545939A39f90FD0C67De5b040d89EA32;
 
   // migration
   address public migrationMaster;
@@ -53,31 +57,27 @@ contract BlockvToken is StandardToken, Pausable {
    * @dev BlockvToken Constructor
    * Runs only on initial contract creation.
    */
-  function BlockvToken(uint256 _initialAmount, address _migrationMaster) {
+  function BlockvToken(address _migrationMaster) {
     require(_migrationMaster != 0);
     migrationMaster = _migrationMaster;
 
-    totalSupply = _initialAmount;                               // Set the total supply
-    uint256 senderTokens = SafeMath.div(SafeMath.mul(_initialAmount, poolAPercentage), 100);
+    totalSupply = totalAmountOfTokens; // Set the total supply
 
-    balances[msg.sender] = senderTokens;                      // Creator address is assigned all
-    Transfer(0x0, msg.sender, senderTokens);
+    balances[msg.sender] = amountOfTokensPoolA;
+    Transfer(0x0, msg.sender, amountOfTokensPoolA);
   
-    uint256 tokensPoolB = SafeMath.div(SafeMath.mul(_initialAmount, poolBPercentage), 100);
-    uint256 tokensPoolC = SafeMath.div(SafeMath.mul(_initialAmount, poolCPercentage), 100);
-    uint256 tokensPoolD = SafeMath.div(SafeMath.mul(_initialAmount, poolDPercentage), 100);
-
+    // time-locked tokens
     poolBLock = new PoolBLock(this);
-    poolCLock = new PoolCLock(this, tokensPoolC, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
-    poolDLock = new PoolDLock(this, tokensPoolD, 0xFba09655dE6FCb113A1733Cf980d58a9b226e031);
+    poolCLock = new PoolCLock(this, beneficiaryOfPoolC);
+    poolDLock = new PoolDLock(this, beneficiaryOfPoolD);
 
-    balances[poolBLock] = tokensPoolB;
-    balances[poolCLock] = tokensPoolC;
-    balances[poolDLock] = tokensPoolD;
+    balances[poolBLock] = amountOfTokensPoolB;
+    balances[poolCLock] = amountOfTokensPoolC;
+    balances[poolDLock] = amountOfTokensPoolD;
 
-    Transfer(0x0, poolBLock, tokensPoolB);
-    Transfer(0x0, poolCLock, tokensPoolC);
-    Transfer(0x0, poolDLock, tokensPoolD);
+    Transfer(0x0, poolBLock, amountOfTokensPoolB);
+    Transfer(0x0, poolCLock, amountOfTokensPoolC);
+    Transfer(0x0, poolDLock, amountOfTokensPoolD);
   }
 
   /**
@@ -149,11 +149,6 @@ contract BlockvToken is StandardToken, Pausable {
     require(msg.sender == migrationMaster);
 
     migrationMaster = _master;
-  }
-    
-  function () {
-    //if ether is sent to this address, send it back.
-    revert();
   }
 }
 

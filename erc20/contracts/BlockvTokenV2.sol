@@ -63,9 +63,4 @@ contract BlockvTokenV2 is StandardToken, Pausable {
     require(msg.sender == migrationAgent);
     migrationAgent = 0;
   }
-
-  function () {
-    //if ether is sent to this address, send it back.
-    revert();
-  }
 }
