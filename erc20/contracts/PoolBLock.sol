@@ -20,6 +20,9 @@ contract PoolBLock {
 
   uint constant payoutCycleInDays = 180 days;
 
+   // total amount of locked tokens
+  uint256 public constant totalAmount = 911567810300063801255851886;
+
   // lock entry
   struct lockEntry {
       uint256 totalAmount;

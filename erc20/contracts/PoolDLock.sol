@@ -28,15 +28,15 @@ contract PoolDLock {
   bool isFirstRelease = true;
 
   // total amount of locked tokens
-  uint256 public constant totalAmount = 5469406861800382807535111321;
+  uint256 public constant totalAmount = 546940686180038280753511132;
 
-  uint256 public constant firstReleaseTokens = 2734703430900191403767555660;
+  uint256 public constant firstReleaseTokens = 273470343090019140376755566;
 
   // amount of tokens to be released after 3 years 36 payout cycles - 1 month delay
-  uint256 public constant nextReleasesTokens = 75963984191671983437987657;
+  uint256 public constant nextReleasesTokens = 7596398419167198343798765;
 
   // the rest of division = (totalAmount * .5) / 36 should be added to the first release
-  uint256 public constant restOfTokens = 9;
+  uint256 public constant restOfTokens = 26;
 
   function PoolDLock(ERC20Basic _token, address _beneficiary) {
     token = _token;
@@ -49,7 +49,7 @@ contract PoolDLock {
   function claim() {
     require(msg.sender == beneficiary);
     require(payoutCyclesLeft > 0);
-    require(now >= firstReleaseDay);
+    require(now >= startDay);
 
     uint256 tokens = 0;
     uint cycles = getPayoutCycles();
@@ -78,7 +78,7 @@ contract PoolDLock {
   }
 
   function getPayoutCycles() private returns (uint) {
-      uint cycles = uint((now - firstReleaseDay) / payoutCycleInDays) + 1;
+      uint cycles = uint((now - startDay) / payoutCycleInDays) + 1;
 
       if (cycles > maxNumOfPayoutCycles) {
           cycles = maxNumOfPayoutCycles;
