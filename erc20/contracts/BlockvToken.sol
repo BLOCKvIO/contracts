@@ -19,10 +19,10 @@ import "./PoolDLock.sol";
  * VEE are displayed using 18 decimal places of precision.
  *
  * 1 VEE is equivalent to:
- *   100000000 == 1 * 10**18 == 1e18 == One Hundred Million Grains
+ *   100000000 == 1 * 10**8 == 1e8 == One Hundred Million Grains
  *
  * 1 Billion VEE (total supply) is equivalent to:
- *   100000000000000000 == 1000000000 * 10**18 == 1e27 == One Hundred Quadrillion Grains
+ *   100000000000000000 == 1000000000 * 10**8 == 1e17 == One Hundred Quadrillion Grains
  *
  * All initial VEE Grains are assigned to the creator of
  * this contract.
