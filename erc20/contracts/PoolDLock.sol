@@ -78,7 +78,7 @@ contract PoolDLock {
   }
 
   function getPayoutCycles() private returns (uint) {
-      uint cycles = uint((now - startDay) / payoutCycleInDays) + 1;
+      uint cycles = uint((now - startDay) / payoutCycleInDays);
 
       if (cycles > maxNumOfPayoutCycles) {
           cycles = maxNumOfPayoutCycles;
