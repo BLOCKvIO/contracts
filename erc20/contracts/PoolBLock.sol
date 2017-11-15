@@ -27,6 +27,8 @@ contract PoolBLock {
   struct lockEntry {
       uint256 totalAmount;
       uint256 amount;
+      uint256 restOfTokens;
+      bool isFirstRelease;
       uint numPayoutCycles;
   }
 
@@ -51,6 +53,11 @@ contract PoolBLock {
 
     uint256 tbr = elem.amount * cycles;
 
+    if (elem.isFirstRelease) {
+      tbr += elem.restOfTokens;
+      elem.isFirstRelease = false;
+    }
+
     elem.numPayoutCycles -= cycles;
 
     assert(token.transfer(msg.sender, tbr));
@@ -67,8 +74,10 @@ contract PoolBLock {
   }
 
   function createAllocationEntry(uint256 totalAmount) private returns(lockEntry) {
-    return lockEntry(totalAmount,
-                     SafeMath.div(totalAmount, maxNumOfPayoutCycles),
-                     maxNumOfPayoutCycles);
+    return lockEntry(totalAmount, // total
+                     SafeMath.div(totalAmount, maxNumOfPayoutCycles), // amount
+                     0, // rest
+                     true, //isFirstRelease
+                     maxNumOfPayoutCycles); //payoutCyclesLeft
   }
 }
