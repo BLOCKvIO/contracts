@@ -44,7 +44,6 @@ contract BlockvToken is StandardToken, Pausable {
   uint256 constant amountOfTokensPoolC = 911567810300063864980230061;
   uint256 constant amountOfTokensPoolD = 546940686180038318988138036;
 
-  address constant beneficiaryOfPoolC = 0x11B48d3179Eb448bcf6b7340B146E98DC44474Da;
   address constant beneficiaryOfPoolD = 0xf194f110b720d000AEed91De3AB3d05DD4f27AB2;
 
   // migration
@@ -68,7 +67,7 @@ contract BlockvToken is StandardToken, Pausable {
   
     // time-locked tokens
     poolBLock = new PoolBLock(this);
-    poolCLock = new PoolCLock(this, beneficiaryOfPoolC);
+    poolCLock = new PoolCLock(this);
     poolDLock = new PoolDLock(this, beneficiaryOfPoolD);
 
     balances[poolBLock] = amountOfTokensPoolB;
