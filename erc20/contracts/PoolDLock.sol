@@ -33,7 +33,7 @@ contract PoolDLock {
   uint256 public constant firstReleaseTokens = 273470343090019159494069018;
 
   // amount of tokens to be released after 3 years 36 payout cycles - 1 month delay
-  uint256 public constant nextReleasesTokens = 7596398419167198343798765;
+  uint256 public constant nextReleasesTokens = 7596398419167198874835250;
 
   // the rest of division = (totalAmount * .5) / 36 should be added to the first release
   uint256 public constant restOfTokens = 18;
