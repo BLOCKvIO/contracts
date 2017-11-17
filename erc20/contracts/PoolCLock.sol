@@ -28,10 +28,10 @@ contract PoolCLock {
   uint constant payoutCycleInDays = 180 days;
 
   // total amount of locked tokens
-  uint256 public constant totalAmount = 911567810300063801255851886;
+  uint256 public constant totalAmount = 911567810300063864980230061;
 
   // tokens to be released every 6months
-  uint256 public constant tokenToBeReleased = 182313562060012760251170377;
+  uint256 public constant tokenToBeReleased = 182313562060012772996046012;
 
   // the rest of division = totalAmount / 5
   uint256 public constant restOfTokens = 1;
