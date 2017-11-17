@@ -69,8 +69,8 @@ contract PoolAllocations {
     return cycles - (maxNumOfPayoutCycles - payoutCyclesLeft);
   }
 
-  function createAllocationEntry(uint256 totalAmount, uint256 amount, uint256 rest) internal returns(lockEntry) {
-    return lockEntry(totalAmount, // total
+  function createAllocationEntry(uint256 total, uint256 amount, uint256 rest) internal returns(lockEntry) {
+    return lockEntry(total, // total
                      amount, // amount
                      rest, // rest
                      true, //isFirstRelease
