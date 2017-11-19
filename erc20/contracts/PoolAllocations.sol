@@ -46,9 +46,6 @@ contract PoolAllocations {
      var elem = allocations[msg.sender];
     require(elem.numPayoutCycles > 0);
 
-    if (elem.isFirstRelease) {
-    }
-
     uint256 tokens = 0;
     uint cycles = getPayoutCycles(elem.numPayoutCycles);
 
