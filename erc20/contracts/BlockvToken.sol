@@ -56,7 +56,7 @@ contract BlockvToken is StandardToken, Pausable {
    * @dev BlockvToken Constructor
    * Runs only on initial contract creation.
    */
-  function BlockvToken(address _migrationMaster) {
+  function BlockvToken(address _migrationMaster) Pausable(_migrationMaster) {
     require(_migrationMaster != 0);
     migrationMaster = _migrationMaster;
 

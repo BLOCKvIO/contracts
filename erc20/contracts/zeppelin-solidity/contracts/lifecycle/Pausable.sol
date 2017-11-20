@@ -1,19 +1,24 @@
 pragma solidity ^0.4.11;
 
-
-import "../ownership/Ownable.sol";
-
-
 /**
  * @title Pausable
  * @dev Base contract which allows children to implement an emergency stop mechanism.
  */
-contract Pausable is Ownable {
+contract Pausable {
   event Pause();
   event Unpause();
 
   bool public paused = false;
+  address public owner;
 
+  function Pausable(address _owner) {
+    owner = _owner;
+  }
+
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
 
   /**
    * @dev modifier to allow actions only when the contract IS paused
