@@ -6,7 +6,7 @@ import "./zeppelin-solidity/contracts/token/ERC20Basic.sol";
 contract PoolAllocations {
 
   // ERC20 basic token contract being held
-  ERC20Basic token;
+  ERC20Basic public token;
 
  // allocations map
   mapping (address => lockEntry) public allocations;
@@ -22,15 +22,15 @@ contract PoolAllocations {
   }
 
   // max number of payout cycles
-  uint maxNumOfPayoutCycles;
+  uint public maxNumOfPayoutCycles;
 
   // first release date
   uint public startDay;
 
   // defines how many of cycles should be released immediately
-  uint cyclesStartFrom = 1;
+  uint public cyclesStartFrom = 1;
 
-  uint payoutCycleInDays;
+  uint public payoutCycleInDays;
 
   function PoolAllocations(ERC20Basic _token) public {
     token = _token;
