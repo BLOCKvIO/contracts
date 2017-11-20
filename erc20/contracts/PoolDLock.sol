@@ -12,15 +12,27 @@ contract PoolDLock is PoolAllocations {
     // setup policy
     maxNumOfPayoutCycles = 36; // total * .5 / 36
     startDay = now + 3 years;  // first release date
-    cyclesStartsFrom = 0;
+    cyclesStartFrom = 0;
     payoutCycleInDays = 30 days; // 1/36 of tokens will be released every month
 
     // allocations
-    allocations[0xf194f110b720d000AEed91De3AB3d05DD4f27AB2] = createAllocationEntry(
-      546940686180038318988138036, // total
-      273470343090019159494069018, // first release
-      7596398419167198874835250,   // next release
-      18                           // the rest
+    allocations[0x4311F6F65B411f546c7DD8841A344614297Dbf62] = createAllocationEntry(
+      182313562060012772996046012, // total
+      91156781030006386498023006, // first release
+      2532132806389066291611750,   // next release
+      6                           // the rest
+    );
+     allocations[0x3b52Ab408cd499A1456af83AC095fCa23C014e0d] = createAllocationEntry(
+      182313562060012772996046012, // total
+      91156781030006386498023006, // first release
+      2532132806389066291611750,   // next release
+      6                           // the rest
+    );
+     allocations[0x728D5312FbbdFBcC1b9582E619f6ceB6412B98E4] = createAllocationEntry(
+      182313562060012772996046012, // total
+      91156781030006386498023006, // first release
+      2532132806389066291611750,   // next release
+      6                           // the rest
     );
   }
 }

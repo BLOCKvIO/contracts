@@ -2,7 +2,6 @@
 pragma solidity ^0.4.13;
 
 import "./zeppelin-solidity/contracts/token/ERC20Basic.sol";
-import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract PoolAllocations {
 
@@ -29,7 +28,7 @@ contract PoolAllocations {
   uint public startDay;
 
   // defines how many of cycles should be released immediately
-  uint cyclesStartsFrom = 1;
+  uint cyclesStartFrom = 1;
 
   uint payoutCycleInDays;
 
@@ -65,7 +64,7 @@ contract PoolAllocations {
   }
 
   function getPayoutCycles(uint payoutCyclesLeft) private constant returns (uint) {
-    uint cycles = uint((now - startDay) / payoutCycleInDays) + cyclesStartsFrom;
+    uint cycles = uint((now - startDay) / payoutCycleInDays) + cyclesStartFrom;
 
     if (cycles > maxNumOfPayoutCycles) {
        cycles = maxNumOfPayoutCycles;

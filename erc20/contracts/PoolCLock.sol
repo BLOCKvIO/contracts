@@ -12,14 +12,14 @@ contract PoolCLock is PoolAllocations {
     // setup policy
     maxNumOfPayoutCycles = 5; // 20% * 5 = 100%
     startDay = now;
-    cyclesStartsFrom = 1; // the first payout cycles is released immediately
+    cyclesStartFrom = 1; // the first payout cycles is released immediately
     payoutCycleInDays = 180 days; // 20% of tokens will be released every 6 months
 
     // allocations
-    allocations[0x905473A0d2f64087Fe4806e5c5911b35C7136290] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
-    allocations[0x878688D7350bc396E54f092acd440F9eB99cce10] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
-    allocations[0xb726bF40BEBf5fDde6916C75927235F9631227A7] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
-    allocations[0x133914a31c0450e131211bB0558BD50465e8C39e] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
-    allocations[0x73eD2009d0f7da0A9d40568eEF3840393471E8b9] = createAllocationEntry(182313562060012772996046013, 0, 36462712412002554599209202, 3);
+    allocations[0x0d02A3365dFd745f76225A0119fdD148955f821E] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
+    allocations[0x0deF4A4De337771c22Ac8C8D4b9C5Fec496841A5] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
+    allocations[0x467600367BdBA1d852dbd8C1661a5E6a2Be5F6C8] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
+    allocations[0x92E01739142386E4820eC8ddC3AFfF69de99641a] = createAllocationEntry(182313562060012772996046012, 0, 36462712412002554599209202, 2);
+    allocations[0x1E0a7E0706373d0b76752448ED33cA1E4070753A] = createAllocationEntry(182313562060012772996046013, 0, 36462712412002554599209202, 3);
   }
 }
