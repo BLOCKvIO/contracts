@@ -39,7 +39,7 @@ contract PoolAContract is Ownable {
 
         // init discounts
         // percent * discountMultiplier
-        discounts[1] = 78118333822467732419033555;
+        discounts[1] = 78975612990889553132979286;
         discounts[2] = 80 * discountMultiplier;
         discounts[3] = 90 * discountMultiplier;
         discounts[100] = 100 * discountMultiplier;
