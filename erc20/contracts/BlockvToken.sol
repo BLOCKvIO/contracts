@@ -84,6 +84,7 @@ contract BlockvToken is StandardToken, Pausable {
    */
   function transfer(address _to, uint256 _value) whenNotPaused returns (bool) {
     require(_to != address(0));
+    require(_to != address(this));
     return super.transfer(_to, _value);
   }
 
@@ -95,6 +96,8 @@ contract BlockvToken is StandardToken, Pausable {
    */
   function transferFrom(address _from, address _to, uint256 _value) whenNotPaused returns (bool) {
     require(_to != address(0));
+    require(_from != _to);
+    require(_to != address(this));
     return super.transferFrom(_from, _to, _value);
   }
 
@@ -104,6 +107,8 @@ contract BlockvToken is StandardToken, Pausable {
    * @param _value The amount of tokens to be spent.
    */
   function approve(address _spender, uint256 _value) whenNotPaused returns (bool) {
+    require(_spender != address(0));
+    require(_spender != address(this));
     return super.approve(_spender, _value);
   }
 
