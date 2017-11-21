@@ -67,7 +67,7 @@ contract PoolAContract is Ownable {
 
     function getTokenAmount(uint256 amount, uint8 discountGroup) private constant returns(uint256) {
         uint256 discount = getTokenDiscount(discountGroup);
-        return amount * 10 ** decimals * discountMultiplier / (oneTokenInWei * discount / 100);
+        return (amount * 10 ** decimals * discountMultiplier) / ((oneTokenInWei * discount) / 100);
     }
 
     function getTokenDiscount(uint8 discount) private constant returns(uint256) {
