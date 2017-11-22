@@ -1,9 +1,7 @@
 pragma solidity ^0.4.13;
 
-
 import "./zeppelin-solidity/contracts/token/StandardToken.sol";
 import "./zeppelin-solidity/contracts/lifecycle/Pausable.sol";
-import "./zeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./PoolBLock.sol";
 import "./PoolCLock.sol";
@@ -38,11 +36,11 @@ contract BlockvToken is StandardToken, Pausable {
   PoolCLock public poolCLock;
   PoolDLock public poolDLock;
 
-  uint256 public constant totalAmountOfTokens = 3646271241200255205023407121;
-  uint256 public constant amountOfTokensPoolA = 1276194934420089321758192493;
-  uint256 public constant amountOfTokensPoolB = 911567810300063801255851780;
-  uint256 public constant amountOfTokensPoolC = 911567810300063801255851780;
-  uint256 public constant amountOfTokensPoolD = 546940686180038280753511068;
+  uint256 public constant totalAmountOfTokens = 3646271241200255205023407108;
+  uint256 public constant amountOfTokensPoolA = 1276194934420089321758192488;
+  uint256 public constant amountOfTokensPoolB = 911567810300063801255851777;
+  uint256 public constant amountOfTokensPoolC = 911567810300063801255851777;
+  uint256 public constant amountOfTokensPoolD = 546940686180038280753511066;
 
   // migration
   address public migrationMaster;
