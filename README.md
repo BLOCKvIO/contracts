@@ -27,4 +27,4 @@ In addition, the contract system was implemented to allow for the two step proce
 * Details can be seen here: [Etherscan](https://etherscan.io/token/VEE)
 
 ### Audit of smart contract source code
-* A complete audit report of the BLOCKv source code can be found in the audit folder of this repo.
+* A complete [audit](https://github.com/BLOCKvIO/contracts/blob/master/audit/Blockv_ChainSecurity_Report_PUBLIC.pdf) report of the BLOCKv source code can be found in the audit folder of this repo.
