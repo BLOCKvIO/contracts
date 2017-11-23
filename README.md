@@ -20,4 +20,5 @@ In addition, the contract system was implemented to allow for the two step proce
 ## Further references
 The address of the BLOCKv token contract on the Ethereum block chain is: xxxx
 Details can be seen here: [Etherscan](https://etherscan.io/token/VEE)
+
 A complete audit report of the BLOCKv source code can be found in the audit folder of this repo.
