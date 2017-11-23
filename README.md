@@ -18,6 +18,13 @@ Pool A: no vesting, Pool B and C: vesting over a period of 2 years, 1/5th vestab
 In addition, the contract system was implemented to allow for the two step process during the Token sale phase, i. e. a) accrue contributions and b) calculate to be distributed token amounts once all parameters were fixed (token price, discount allocation). For that purpose, all contributions were recorded in a separate smart contract (BlockvPublicLedger), which was used to calculate the token amounts to be distributed by the Pool A category of the VEE token smart contract system.
 
 ## Further references
+### Ledger Contract
+* The address of the BlockvPublicLedger contract on the Ethereum block chain is: `0x323beae259bc3046d04d13f080d18610a471e8dc`
+* Details can be seen here: [Etherscan](https://etherscan.io/address/0x323beae259bc3046d04d13f080d18610a471e8dc)
+
+### VEE Token Contract
 * The address of the BLOCKv token contract on the Ethereum block chain is: xxxx
 * Details can be seen here: [Etherscan](https://etherscan.io/token/VEE)
+
+### Audit of smart contract source code
 * A complete audit report of the BLOCKv source code can be found in the audit folder of this repo.
