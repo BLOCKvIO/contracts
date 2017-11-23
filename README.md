@@ -24,6 +24,7 @@ In addition, the contract system was implemented to allow for the two step proce
 
 ### VEE Token Contract
 * The address of the BLOCKv token contract on the Ethereum block chain is: `0x340D2bdE5Eb28c1eed91B2f790723E3B160613B7`
+
 The contract ABI is:
 
 ```
