@@ -23,8 +23,8 @@ In addition, the contract system was implemented to allow for the two step proce
 * Details can be seen here: [Etherscan](https://etherscan.io/address/0x323beae259bc3046d04d13f080d18610a471e8dc)
 
 ### VEE Token Contract
-* The address of the BLOCKv token contract on the Ethereum block chain is: `xxxx`
-* Details can be seen here: [Etherscan](https://etherscan.io/token/VEE)
+* The address of the BLOCKv token contract on the Ethereum block chain is: `0x340D2bdE5Eb28c1eed91B2f790723E3B160613B7`
+* Details can be seen here: [Etherscan](https://etherscan.io/address/0x340D2bdE5Eb28c1eed91B2f790723E3B160613B7)
 
 ### Audit of smart contract source code
 * A complete [audit](https://github.com/BLOCKvIO/contracts/blob/master/audit/Blockv_ChainSecurity_Report_PUBLIC.pdf) report of the BLOCKv source code can be found in the audit folder of this repo.
